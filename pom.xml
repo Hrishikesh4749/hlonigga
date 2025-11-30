@@ -2,12 +2,21 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+<<<<<<< HEAD
   <groupId>hlo</groupId>
   <artifactId>gitjavaproj</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>gitjavaproj</name>
+=======
+  <groupId>com.lab.week2</groupId>
+  <artifactId>gitmavenproject</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>gitmavenproject</name>
+>>>>>>> 1febf2e1cb0883c648e99d844c2e5a4f0bb07ad3
   <url>http://maven.apache.org</url>
 
   <properties>
