@@ -1,0 +1,114 @@
+:: ===== MOVE TO WORK DIRECTORY =====
+cd C:\
+mkdir C:\exam-lab
+cd C:\exam-lab
+
+
+:: ===== CREATE COMPOSE FILE (PART 1: NGINX + POSTGRES) =====
+notepad docker-compose.yml
+
+:: Paste and save this inside docker-compose.yml:
+:: services:
+::   web:
+::     image: nginx:latest
+::     ports:
+::       - "8080:80"
+::   db:
+::     image: postgres:15
+::     environment:
+::       POSTGRES_USER: demo
+::       POSTGRES_PASSWORD: demo
+::       POSTGRES_DB: demo_db
+
+docker compose up -d
+docker compose ps
+docker compose down
+
+
+:: ===== MODIFY COMPOSE FILE (PART 2: ADD REDIS + depends_on) =====
+notepad docker-compose.yml
+
+:: Replace file with:
+:: services:
+::   web:
+::     image: nginx:latest
+::     ports:
+::       - "8080:80"
+::     depends_on:
+::       - db
+::       - redis
+::   db:
+::     image: postgres:15
+::     environment:
+::       POSTGRES_USER: demo
+::       POSTGRES_PASSWORD: demo
+::       POSTGRES_DB: demo_db
+::   redis:
+::     image: redis:alpine
+
+docker compose up -d
+docker compose ps
+docker compose down
+
+
+:: ===== FINAL VERSION (NETWORK + VOLUME + FLASK BUILD) =====
+notepad app.py
+
+:: Paste this and save:
+:: from flask import Flask
+:: app = Flask(__name__)
+:: @app.route("/")
+:: def home():
+::     return "Hello from Flask + Docker!"
+:: if __name__ == "__main__":
+::     app.run(host="0.0.0.0", port=5000)
+
+notepad Dockerfile
+
+:: Paste this and save:
+:: FROM python:3.10-slim
+:: WORKDIR /app
+:: COPY app.py /app/
+:: RUN pip install flask
+:: CMD ["python", "app.py"]
+
+notepad docker-compose.yml
+
+:: Replace file with FINAL VERSION:
+:: networks:
+::   app-net:
+::
+:: volumes:
+::   db-data:
+::
+:: services:
+::   web:
+::     build: .
+::     ports:
+::       - "5000:5000"
+::     depends_on:
+::       - db
+::       - redis
+::     networks:
+::       - app-net
+::   db:
+::     image: postgres:15
+::     environment:
+::       POSTGRES_USER: demo
+::       POSTGRES_PASSWORD: demo
+::       POSTGRES_DB: demo_db
+::     volumes:
+::       - db-data:/var/lib/postgresql/data
+::     networks:
+::       - app-net
+::   redis:
+::     image: redis:alpine
+::     networks:
+::       - app-net
+
+docker compose up --build -d
+docker compose ps
+
+
+:: ===== CLEANUP =====
+docker compose down
