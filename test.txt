@@ -1,0 +1,94 @@
+docker commands 
+REM ===== CHECK DOCKER INSTALLATION =====
+docker --version
+
+
+REM =================================================
+REM PART 1: OFFICIAL REDIS IMAGE
+REM =================================================
+
+docker pull redis
+
+docker run --name my-redis -d redis
+
+docker ps
+
+docker exec -it my-redis redis-cli
+
+REM Redis test (type inside Redis shell)
+SET name "Hrishi"
+GET name
+exit
+
+docker stop my-redis
+
+docker start my-redis
+
+docker stop my-redis
+
+docker rm my-redis
+
+docker rmi redis
+
+
+
+REM =================================================
+REM PART 2: CUSTOM IMAGE USING DOCKERFILE
+REM =================================================
+
+mkdir C:\DockerProjects\Redis
+
+cd C:\DockerProjects\Redis
+
+notepad Dockerfile
+
+REM Dockerfile content (write manually):
+REM FROM redis:latest
+REM CMD ["redis-server"]
+
+docker build -t redisnew .
+
+docker run --name myredisnew -d redisnew
+
+docker ps -a
+
+docker stop myredisnew
+
+docker login
+
+docker commit myredisnew hrishi4749/redis1
+
+docker images
+
+docker push hrishi4749/redis1
+
+docker rm myredisnew
+
+docker rmi redisnew
+
+
+
+REM =================================================
+REM PART 3: VERIFY IMAGE FROM DOCKER HUB
+REM =================================================
+
+docker logout
+
+docker pull hrishi4749/redis1
+
+docker run --name myredis -d hrishi4749/redis1
+
+docker exec -it myredis redis-cli
+
+REM Redis test (type inside Redis shell)
+SET name "Abcdef"
+GET name
+exit
+
+docker stop myredis
+
+docker rm myredis
+
+docker images
+
+docker rmi hrishi4749/redis1
